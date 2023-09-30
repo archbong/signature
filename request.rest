@@ -1,0 +1,103 @@
+
+# BASE_URL
+
+GET http://localhost:5000/
+
+# User Routes
+# /api/test/all
+# /api/auth/me
+# /api/test/mod
+# /api/test/admin
+
+
+
+# Auth Routes
+# /api/auth/signup
+###
+POST  http://localhost:5000/api/auth/signup
+Content-Type: application/json
+
+{
+  "username": "Samuel",
+  "email": "Samuel@email.com",
+  "password": "Samuel123Pass",
+  "roles": ["user"]
+}
+
+# {
+#   "username": "Admin",
+#   "email": "Admin@email.com",
+#   "password": "Admin123Pass",
+#   "roles": ["admin"]
+# }
+
+# {
+#   "username": "John Braide",
+#   "email": "Johnny@email.com",
+#   "password": "john123Pass"
+# }
+
+# /api/auth/signin
+###
+POST  http://localhost:5000/api/auth/signin
+Content-Type: application/json
+
+{
+  "email": "Samuel@email.com",
+  "password": "Samuel123Pass"
+}
+
+# {
+#   "email": "Samuel@email.com",
+#   "password": "Samuel123Pass"
+# }
+
+{
+  "email": "Admin@email.com",
+  "password": "Admin123Pass"
+}
+
+
+# Project API test
+
+###
+GET https://localhost:5000/api/projects/
+
+###
+POST https://localhost:5000/api/projects
+Content-Type: application/json
+
+{
+  "title": "Project one",
+  "description": "Build a backend project",
+  "team": "Node js"
+}
+
+###
+GET https://localhost:5000/api/projects
+
+###
+PUT https://localhost:5000/api/projects/
+
+###
+DELETE https://localhost:5000/api/projects/
+
+
+
+# Task API test 
+# /api/tasks/:taskId
+###
+GET https://localhost:5000/api/tasks/
+
+###
+POST https://localhost:5000/api/tasks
+
+###
+GET https://localhost:5000/api/tasks
+
+###
+PUT https://localhost:5000/api/tasks/
+
+###
+DELETE https://localhost:5000/api/tasks/
+

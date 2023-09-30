@@ -12,7 +12,8 @@ mongoose.connect(config.development.database_url, {
     useUnifiedTopology: true
 })
 mongoose.connection.on('error', () => {
-    throw new Error(`unable to connect to database: ${config.development.database_url}`)
+  if('error') throw new Error(`unable to connect to database: ${config.development.database_url}`)
+  console.log(`connected to database: ${config.development.database_url}`)
 })
 
 const io = new Server(server, {

@@ -5,15 +5,21 @@ const compress = require('compression')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
-
+const ms = require("ms")
+const enforceSSL = require("express-enforces-ssl");
 const app = express()
 
 
+app.enable("trust proxy");
+app.use(enforceSSL());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(compress())
-app.use(helmet())
+app.use(helmet.hsts({
+    maxAge: ms("1 year"),
+    includeSubDomains: true
+}));
 app.use(cors())
 app.use(morgan('short'))
 
