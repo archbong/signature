@@ -1,8 +1,10 @@
 const config = require('./config/env');
+const content = require('./content')
 const http = require('http');
 const app = require('./express');
 const { Server } = require('socket.io');
 const mongoose = require('mongoose');
+const signature = require('./content');
 const server = http.createServer(app);
 
 mongoose.Promise = global.Promise
@@ -18,7 +20,7 @@ mongoose.connection.on('error', () => {
 
 const io = new Server(server, {
     cors: {
-      origin: 'http://localhost:3000',
+      origin: process.env.CLIENT_BASE_URL,
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
     },
   });
@@ -31,7 +33,7 @@ const io = new Server(server, {
 
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Hello Server...'})
+    res.status(200).send(`${signature.header.title} ${signature.header.caption} ${signature.body.content}`)
 })
 
 

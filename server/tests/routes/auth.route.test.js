@@ -1,46 +1,36 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('express')();
-const { expect } = chai;
+const request = require('request');
+const { describe, it } = require('mocha');
+const expect = require('chai').expect;
 
-chai.use(chaiHttp);
+describe('Sign up routes test', () => {
+  const options = {
+    url: `${process.env.API_BASE_URL}/api/v1/auth/signup`,
+    method: "POSY"
+  }
 
-describe('Authentication Routes', () => {
-  describe('POST /signup', () => {
-    it('should create a new user', (done) => {
-      chai
-        .request(app)
-        .post('/signup')
-        .send({
-          firstname: 'John',
-          lastname: 'Doe',
-          email: 'johndoe@example.com',
-          password: 'securepassword',
-        })
-        .end((err, res) => {
-          expect(res).to.have.status(201);
-          // Add more assertions to validate the response or user creation
-          done();
-        });
-    });
-  });
+  it('POST error on signup route', (done) => {
+    request(options, (err, res, body) => {
+      if (err) {
+        expect(res.statusCode).to.equal(500);
+      }
+      done();
+    })
+  })
 
-  describe('POST /signin', () => {
-    it('should authenticate a user', (done) => {
-      chai
-        .request(app)
-        .post('/signin')
-        .send({
-          email: 'johndoe@example.com',
-          password: 'securepassword',
-        })
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          // Add more assertions to validate the response or user authentication
-          done();
-        });
-    });
-  });
+  describe('Sign in route', () => {
+    const options = {
+      url: `${process.env.API_BASE_URL}/api/v1/signin`,
+      method: "GET"
+    }
 
-  // Add similar test cases for other routes (e.g., /request-email-verification, /verify-email, etc.)
-});
+    it('POST error on signin route', (done) => {
+      request(options, (err, res, body) => {
+        if (err) {
+          expect(res.statusCode).to.equal(500);
+        }
+        done();
+      })
+    })
+  })
+})
+

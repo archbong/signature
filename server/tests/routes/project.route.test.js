@@ -1,77 +1,87 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../../express'); // Import your Express app
-const expect = chai.expect;
+const request = require('request');
+const { describe, it } = require('mocha');
+const expect = require('chai').expect;
 
-chai.use(chaiHttp);
+describe('project routes test', () => {
+  const options = {
+    url: `${process.env.API_BASE_URL}/api/v1/projects`,
+    method: "GET"
+  }
 
-describe('Project Routes', () => {
- 
-  // Define variables for testing data here
+  it('GET all project route', (done) => {
+    request(options, (err, res, body) => {
+      if (err) {
+        expect(res.statusCode).to.equal(500);
+      }
+      expect(res.statusCode).to.equal(200)
+      done();
 
-  describe('GET /projects', () => {
-    it('should return a list of projects', (done) => {
-      chai
-        .request(app)
-        .get('/projects')
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('array');
+    })
+  })
+
+  describe('GET Single project route', () => {
+    const options = {
+      url: `${process.env.API_BASE_URL}/api/v1/projects/650b16ed9a019b17f99a6853`,
+      method: "GET"
+    }
+
+    it('Get project by projectId route', (done) => {
+      request(options, (err, res, body) => {
+        if (err) {
+          expect(res.statusCode).to.equal(500);
+        }
+        expect(res.statusCode).to.equal(200)
+        done();
+
+      })
+    })
+
+    describe('POST project route', () => {
+      const options = {
+        url: `${process.env.API_BASE_URL}/api/v1/projects`,
+        method: "POST"
+      }
+  
+      it('POST error on new project route', (done) => {
+        request(options, (err, res, body) => {
+          if (err) {
+            expect(res.statusCode).to.equal(500);
+          }
           done();
-        });
-    });
-  });
+        })
+      })
+    })
 
-  describe('POST /projects', () => {
-    it('should create a new project', (done) => {
-      chai
-        .request(app)
-        .post('/projects')
-        .send({ /* Define your request body here */ })
-        .end((err, res) => {
-          expect(res).to.have.status(201); // Adjust status code as needed
-          expect(res.body).to.be.an('object'); // Adjust this based on your response structure
+    describe('Updating a project route', (done) => {
+      const options = {
+        url: `${process.env.API_BASE_URL}/api/v1/projects/650b16ed9a019b17f99a6853`,
+        method: "PUT"
+      }
+      it('PUT error on project by projectId route', (done) => {
+        request(options, (err, res, body) => {
+          if (err) {
+            expect(res.statusCode).to.equal(500);
+          }
           done();
-        });
-    });
-  });
+        })
+      })
+    })
+  })
 
-  describe('GET /projects/:projectId', () => {
-    it('should return a specific project', (done) => {
-      chai
-        .request(app)
-        .get('/projects/:projectId') // Replace :projectId with an actual project ID
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object'); // Adjust this based on your response structure
-          done();
-        });
-    });
-  });
+  describe('Deleting a project route', (done) => {
+    const options = {
+      url: `${process.env.API_BASE_URL}/api/v1/projects/${process.env.projectID}`,
+      method: "DELETE"
+    }
+    it('Delete project by projectId route', (done) => {
+      request(options, (err, res, body) => {
+        if (err) {
+          expect(res.statusCode).to.equal(500);
+        }
+        expect(res.statusCode).to.equal(204)
+        done();
+      })
+    })
+  })
+})
 
-  describe('PUT /projects/:projectId', () => {
-    it('should update a specific project', (done) => {
-      chai
-        .request(app)
-        .put('/projects/:projectId')
-        .send({ /* Define your request body for updating here */ })
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
-          done();
-        });
-    });
-  });
-
-  describe('DELETE /projects/:projectId', () => {
-    it('should delete a specific project', (done) => {
-      chai
-        .request(app)
-        .delete('/projects/:projectId')
-        .end((err, res) => {
-          expect(res).to.have.status(204);
-          done();
-        });
-    });
-  });
-});

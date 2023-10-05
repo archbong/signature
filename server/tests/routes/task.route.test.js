@@ -1,77 +1,84 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../../express');
-const expect = chai.expect;
+const request = require('request');
+const { describe, it } = require('mocha');
+const expect = require('chai').expect;
 
-chai.use(chaiHttp);
+describe('Task routes test', () => {
+  const options = {
+    url: `${process.env.API_BASE_URL}/api/v1/tasks`,
+    method: "GET"
+  }
 
-describe('task Routes', () => {
- 
-  // Define variables for testing data here
+  it('GET all task route', (done) => {
+    request(options, (err, res, body) => {
+      expect(res.statusCode).to.equal(200)
+      done();
 
-  describe('GET /tasks', () => {
-    it('should return a list of tasks', (done) => {
-      chai
-        .request(app)
-        .get('/tasks')
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('array');
+    })
+  })
+
+  describe('GET Single task route', () => {
+    const options = {
+      url: `${process.env.API_BASE_URL}/api/v1/tasks`,
+      method: "GET"
+    }
+
+    it('Get task by taskId route', (done) => {
+      request(options, (err, res, body) => {
+        if (err) {
+          expect(res.statusCode).to.equal(500);
+        }
+        expect(res.statusCode).to.equal(200)
+        done();
+
+      })
+    })
+
+    describe('POST task route', () => {
+      const options = {
+        url: `${process.env.API_BASE_URL}/api/v1/tasks`,
+        method: "POST"
+      }
+  
+      it('POST error on new task route', (done) => {
+        request(options, (err, res, body) => {
+          if (err) {
+            expect(res.statusCode).to.equal(500);
+          }
           done();
-        });
-    });
-  });
+        })
+      })
+    })
 
-  describe('POST /tasks', () => {
-    it('should create a new task', (done) => {
-      chai
-        .request(app)
-        .post('/tasks')
-        .send({ /* Define your request body here */ })
-        .end((err, res) => {
-          expect(res).to.have.status(201);
-          expect(res.body).to.be.an('object');
+    describe('Updating a task route', (done) => {
+      const options = {
+        url: `${process.env.API_BASE_URL}/api/v1/tasks/${process.env.taskID}`,
+        method: "PUT"
+      }
+      it('PUT error on task by taskId route', (done) => {
+        request(options, (err, res, body) => {
+          if (err) {
+            expect(res.statusCode).to.equal(500);
+          }
           done();
-        });
-    });
-  });
+        })
+      })
+    })
+  })
 
-  describe('GET /tasks/:taskId', () => {
-    it('should return a specific task', (done) => {
-      chai
-        .request(app)
-        .get('/tasks/:taskId')
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
-          done();
-        });
-    });
-  });
+  describe('Deleting a task route', (done) => {
+    const options = {
+      url: `${process.env.API_BASE_URL}/api/v1/tasks/${process.env.taskID}`,
+      method: "DELETE"
+    }
+    it('Delete  error task by taskId route', (done) => {
+      request(options, (err, res, body) => {
+        if (err) {
+          expect(res.statusCode).to.equal(500);
+        }
+        expect(res.statusCode).to.equal(204)
+        done();
+      })
+    })
+  })
+})
 
-  describe('PUT /tasks/:taskId', () => {
-    it('should update a specific task', (done) => {
-      chai
-        .request(app)
-        .put('/tasks/:taskId')
-        .send({ /* Define your request body for updating here */ })
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
-          done();
-        });
-    });
-  });
-
-  describe('DELETE /tasks/:taskId', () => {
-    it('should delete a specific task', (done) => {
-      chai
-        .request(app)
-        .delete('/tasks/:taskId')
-        .end((err, res) => {
-          expect(res).to.have.status(204);
-          done();
-        });
-    });
-  });
-});

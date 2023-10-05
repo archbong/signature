@@ -3,35 +3,55 @@ const CustomError = require('../utils/customError');
 
 class TimeTrackerService {
     async create(data) {
-        return await new TimeTracker(data).save();
+        try {
+            return await new TimeTracker(data).save();
+        } catch (err) {
+            throw new CustomError(`Time service error creating data`, 500)
+        }
     }
 
     async getAll() {
-        return await TimeTracker.find();
+        try {
+            return await TimeTracker.find();
+        } catch (err) {
+            throw new CustomError(`Time service error fetching all data`, 500)
+        }
     }
 
     async getOne(timeTrackerId) {
-        const timetracker = await TimeTracker.findOne({ _id: timeTrackerId });
-        if (!timetracker) throw new CustomError("TimeTracker does not exist")
+        try {
+            const timetracker = await TimeTracker.findOne({ _id: timeTrackerId });
+            if (!timetracker) throw new CustomError("TimeTracker does not exist")
 
-        return timetracker;
+            return timetracker;
+        } catch (err) {
+            throw new CustomError(`Time service error fetching single data`, 500)
+        }
     }
 
     async update(timeTrackerId, data) {
-        const timetracker = await TimeTracker.findByIdAndUpdate(
-            { _id: timeTrackerId },
-            { $set: data },
-            { new: true }
-        );
-        if (!timetracker) throw new CustomError("TimeTracker doesn't exist", 400);
+        try {
+            const timetracker = await TimeTracker.findByIdAndUpdate(
+                { _id: timeTrackerId },
+                { $set: data },
+                { new: true }
+            );
+            if (!timetracker) throw new CustomError("TimeTracker doesn't exist", 400);
 
-        return timetracker;
+            return timetracker;
+        } catch (err) {
+            throw new CustomError(`Time service error updating data`, 500)
+        }
     }
 
     async delete(timeTrackerId) {
-        const timetracker = await TimeTracker.deleteOne({ _id: timeTrackerId });
-        if (!timetracker) throw new CustomError("TimeTracker does not exist")
-        return timetracker;
+        try {
+            const timetracker = await TimeTracker.deleteOne({ _id: timeTrackerId });
+            if (!timetracker) throw new CustomError("TimeTracker does not exist")
+            return timetracker;
+        } catch (err) {
+            throw new CustomError(`Time service error deleting data`, 500)
+        }
     }
 }
 

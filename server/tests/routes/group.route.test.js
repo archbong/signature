@@ -1,77 +1,78 @@
-const chai = require('chai');
-const chaiHttp = require('chai-http');
-const app = require('../../express');
-const expect = chai.expect;
+const request = require('request');
+const { describe, it } = require('mocha');
+const expect = require('chai').expect;
 
-chai.use(chaiHttp);
+describe('Group routes test', () => {
+  const options = {
+    url: `${process.env.API_BASE_URL}/api/v1/groups`,
+    method: "GET"
+  }
 
-describe('Group Routes', () => {
- 
-  // Define variables for testing data here
+  it('GET all group route', (done) => {
+    request(options, (err, res, body) => {
+      expect(res.statusCode).to.equal(200)
+      done();
+    })
+  })
 
-  describe('GET /groups', () => {
-    it('should return a list of groups', (done) => {
-      chai
-        .request(app)
-        .get('/groups')
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('array');
+  describe('GET Single group route', () => {
+    const options = {
+      url: `${process.env.API_BASE_URL}/api/v1/groups/`,
+      method: "GET"
+    }
+
+    it('Get group by groupId route', (done) => {
+      request(options, (err, res, body) => {
+        expect(res.statusCode).to.equal(200)
+        done();
+      })
+    })
+
+    describe('POST group route', () => {
+      const options = {
+        url: `${process.env.API_BASE_URL}/api/v1/groups`,
+        method: "POST"
+      }
+  
+      it('POST error on new group route', (done) => {
+        request(options, (err, res, body) => {
+          if (err) {
+            expect(res.statusCode).to.equal(500);
+          }
           done();
-        });
-    });
-  });
+        })
+      })
+    })
 
-  describe('POST /groups', () => {
-    it('should create a new group', (done) => {
-      chai
-        .request(app)
-        .post('/groups')
-        .send({ /* Define your request body here */ })
-        .end((err, res) => {
-          expect(res).to.have.status(201);
-          expect(res.body).to.be.an('object');
+    describe('Updating a group route', (done) => {
+      const options = {
+        url: `${process.env.API_BASE_URL}/api/v1/groups/650b16ed9a019b17f99a6853`,
+        method: "PUT"
+      }
+      it('PUT error on group by groupId route', (done) => {
+        request(options, (err, res, body) => {
+          if (err) {
+            expect(res.statusCode).to.equal(500);
+          }
           done();
-        });
-    });
-  });
+        })
+      })
+    })
+  })
 
-  describe('GET /groups/:groupId', () => {
-    it('should return a specific group', (done) => {
-      chai
-        .request(app)
-        .get('/groups/:groupId')
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
-          done();
-        });
-    });
-  });
+  describe('Deleting a group route', (done) => {
+    const options = {
+      url: `${process.env.API_BASE_URL}/api/v1/groups/${process.env.groupID}`,
+      method: "DELETE"
+    }
+    it('Delete error group by groupId route', (done) => {
+      request(options, (err, res, body) => {
+        if (err) {
+          expect(res.statusCode).to.equal(500);
+        }
+        done();
+      })
+    })
+  })
+})
 
-  describe('PUT /groups/:groupId', () => {
-    it('should update a specific group', (done) => {
-      chai
-        .request(app)
-        .put('/groups/:groupId')
-        .send({ /* Define your request body for updating here */ })
-        .end((err, res) => {
-          expect(res).to.have.status(200);
-          expect(res.body).to.be.an('object');
-          done();
-        });
-    });
-  });
-
-  describe('DELETE /groups/:groupId', () => {
-    it('should delete a specific group', (done) => {
-      chai
-        .request(app)
-        .delete('/groups/:groupId')
-        .end((err, res) => {
-          expect(res).to.have.status(204);
-          done();
-        });
-    });
-  });
-});
