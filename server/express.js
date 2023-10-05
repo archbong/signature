@@ -3,14 +3,9 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const compress = require('compression')
 const cors = require('cors')
-const morgan = require('morgan')
-const ms = require("ms")
-const enforceSSL = require("express-enforces-ssl");
+const morgan = require('morgan') 
 const app = express()
 
-
-app.enable("trust proxy");
-app.use(enforceSSL());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
