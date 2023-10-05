@@ -9,13 +9,13 @@ const server = http.createServer(app);
 
 mongoose.Promise = global.Promise
 mongoose.set('strictQuery', false);
-mongoose.connect(config.development.database_url, {
+mongoose.connect(config.production.database_url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 mongoose.connection.on('error', () => {
-  if('error') throw new Error(`unable to connect to database: ${config.development.database_url}`)
-  console.log(`connected to database: ${config.development.database_url}`)
+  if('error') throw new Error(`unable to connect to database: ${config.production.database_url}`)
+  console.log(`connected to database: ${config.production.database_url}`)
 })
 
 const io = new Server(server, {
